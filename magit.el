@@ -4831,6 +4831,7 @@ With a non numeric prefix ARG, show all entries"
              ,(format "--abbrev=%s" magit-sha1-abbrev-length)
              ,@(cond ((eq style 'long) (list "--stat" "-z"))
                      ((eq style 'oneline) (list "--pretty=oneline"))
+                     ((eq style 'oneline-with-author) (list "--pretty=format:%h %an * %s"))
                      (t nil))
              ,@(if magit-have-decorate (list "--decorate=full"))
              ,@(if magit-have-graph (list "--graph"))
@@ -4862,7 +4863,9 @@ With a non numeric prefix ARG, show all entries"
                       extra-args)))
     (magit-buffer-switch magit-log-buffer-name)
     (magit-mode-init topdir 'magit-log-mode #'magit-refresh-log-buffer log-range
-                     'oneline args)))
+                     (if (boundp 'magit-log-style)
+                         magit-log-style
+                       'oneline) args)))
 
 (define-obsolete-function-alias 'magit-display-log 'magit-log)
 
